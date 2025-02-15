@@ -8,9 +8,6 @@ package com.goldman.trade_service.avro;
 import org.apache.avro.generic.GenericArray;
 import org.apache.avro.specific.SpecificData;
 import org.apache.avro.util.Utf8;
-
-import com.goldman.trade_service.model.TradeEvent;
-
 import org.apache.avro.message.BinaryMessageEncoder;
 import org.apache.avro.message.BinaryMessageDecoder;
 import org.apache.avro.message.SchemaStore;
@@ -472,11 +469,6 @@ public class TradeAvro extends org.apache.avro.specific.SpecificRecordBase imple
       } catch (java.lang.Exception e) {
         throw new org.apache.avro.AvroRuntimeException(e);
       }
-    }
-
-    public TradeEvent setTradeId(Object tradeId2) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'setTradeId'");
     }
   }
 

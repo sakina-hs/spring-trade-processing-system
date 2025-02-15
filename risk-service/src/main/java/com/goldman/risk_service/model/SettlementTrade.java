@@ -4,7 +4,8 @@ import lombok.Data;
 
 @Data
 public class SettlementTrade {
-    private int id;
-    private String name;
+    private int Id;
+    private String symbol;
     private int quantity;
+    private double price;
 }

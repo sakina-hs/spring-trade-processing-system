@@ -5,10 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
-import com.goldman.trade_service.model.TradeEvent;
 import com.goldman.trade_service.model.TradeRequest;
-import com.goldman.trade_service.model.Trade;
-import com.goldman.trade_service.dao.TradeRepo;
 import org.springframework.beans.factory.annotation.Value;
 import com.goldman.trade_service.avro.TradeAvro;
 
@@ -17,9 +14,6 @@ public class TradeService {
     private static final Logger logger = LoggerFactory.getLogger(TradeService.class);
     @Autowired
     private KafkaTemplate<String, TradeAvro> kafkaTemplate;
-
-    @Autowired
-    private TradeRepo tradeRepo;
 
     @Value("${spring.kafka.template.default-topic}")
     private String tradeTopic;
@@ -53,9 +47,4 @@ public class TradeService {
         System.out.println("Trade cancelled: " + tradeAvro.getTradeId());
     }
 
-    public Trade createTrade(Trade trade) {
-        Trade savedTrade = tradeRepo.save(trade);
-        System.out.println("Trade created: " + savedTrade.getTradeId());
-        return savedTrade;
-    }
 }
