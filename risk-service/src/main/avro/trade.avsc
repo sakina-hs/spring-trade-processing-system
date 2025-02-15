@@ -1,0 +1,11 @@
+{
+  "namespace": "com.goldman.trade_service.avro",
+  "type": "record",
+  "name": "TradeAvro",
+  "fields": [
+    { "name": "tradeId", "type": "int" },
+    { "name": "quantity", "type": "int" },
+    { "name": "price", "type": "double" },
+    { "name": "symbol", "type": "string" }
+  ]
+}
