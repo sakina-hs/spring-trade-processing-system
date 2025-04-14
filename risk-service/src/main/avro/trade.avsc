@@ -4,8 +4,9 @@
   "name": "TradeAvro",
   "fields": [
     { "name": "tradeId", "type": "int" },
+    { "name": "symbol", "type": "string" },
     { "name": "quantity", "type": "int" },
     { "name": "price", "type": "double" },
-    { "name": "symbol", "type": "string" }
+    { "name": "tradeType", "type": "string" }
   ]
 }

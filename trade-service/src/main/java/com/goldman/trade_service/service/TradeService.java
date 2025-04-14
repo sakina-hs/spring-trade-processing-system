@@ -3,6 +3,7 @@ package com.goldman.trade_service.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import com.goldman.trade_service.model.TradeRequest;
@@ -23,7 +24,8 @@ public class TradeService {
                 .setTradeId(request.getTradeId()) // Example field
                 .setSymbol(request.getSymbol())
                 .setQuantity(request.getQuantity()) // Example field
-                .setPrice(request.getPrice()) // Example field
+                .setPrice(request.getPrice())
+                .setTradeType(request.getTradeType())
                 .build();
         logger.info("Producing Kafka message: {}", tradeAvro);
         kafkaTemplate.send(tradeTopic, tradeAvro)
@@ -34,17 +36,6 @@ public class TradeService {
                         logger.error("Failed to send message", ex);
                     }
                 });
-    }
-
-    public void cancelTrade(TradeRequest request) {
-        TradeAvro tradeAvro = TradeAvro.newBuilder()
-                .setTradeId(request.getTradeId()) // Example field
-                .setSymbol(request.getSymbol())
-                .setQuantity(request.getQuantity()) // Example field
-                .setQuantity(request.getQuantity()) // Example field
-                .build();
-        kafkaTemplate.send("trade-cancelled-topic", tradeAvro);
-        System.out.println("Trade cancelled: " + tradeAvro.getTradeId());
     }
 
 }

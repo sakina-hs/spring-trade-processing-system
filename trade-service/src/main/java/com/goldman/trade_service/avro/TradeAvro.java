@@ -14,10 +14,10 @@ import org.apache.avro.message.SchemaStore;
 
 @org.apache.avro.specific.AvroGenerated
 public class TradeAvro extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = -8572338817770041803L;
+  private static final long serialVersionUID = -1466570743104060923L;
 
 
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"TradeAvro\",\"namespace\":\"com.goldman.trade_service.avro\",\"fields\":[{\"name\":\"tradeId\",\"type\":\"int\"},{\"name\":\"quantity\",\"type\":\"int\"},{\"name\":\"price\",\"type\":\"double\"},{\"name\":\"symbol\",\"type\":\"string\"}]}");
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"TradeAvro\",\"namespace\":\"com.goldman.trade_service.avro\",\"fields\":[{\"name\":\"tradeId\",\"type\":\"int\"},{\"name\":\"symbol\",\"type\":\"string\"},{\"name\":\"quantity\",\"type\":\"int\"},{\"name\":\"price\",\"type\":\"double\"},{\"name\":\"tradeType\",\"type\":\"string\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static final SpecificData MODEL$ = new SpecificData();
@@ -74,9 +74,10 @@ public class TradeAvro extends org.apache.avro.specific.SpecificRecordBase imple
   }
 
   private int tradeId;
+  private java.lang.CharSequence symbol;
   private int quantity;
   private double price;
-  private java.lang.CharSequence symbol;
+  private java.lang.CharSequence tradeType;
 
   /**
    * Default constructor.  Note that this does not initialize fields
@@ -88,15 +89,17 @@ public class TradeAvro extends org.apache.avro.specific.SpecificRecordBase imple
   /**
    * All-args constructor.
    * @param tradeId The new value for tradeId
+   * @param symbol The new value for symbol
    * @param quantity The new value for quantity
    * @param price The new value for price
-   * @param symbol The new value for symbol
+   * @param tradeType The new value for tradeType
    */
-  public TradeAvro(java.lang.Integer tradeId, java.lang.Integer quantity, java.lang.Double price, java.lang.CharSequence symbol) {
+  public TradeAvro(java.lang.Integer tradeId, java.lang.CharSequence symbol, java.lang.Integer quantity, java.lang.Double price, java.lang.CharSequence tradeType) {
     this.tradeId = tradeId;
+    this.symbol = symbol;
     this.quantity = quantity;
     this.price = price;
-    this.symbol = symbol;
+    this.tradeType = tradeType;
   }
 
   @Override
@@ -110,9 +113,10 @@ public class TradeAvro extends org.apache.avro.specific.SpecificRecordBase imple
   public java.lang.Object get(int field$) {
     switch (field$) {
     case 0: return tradeId;
-    case 1: return quantity;
-    case 2: return price;
-    case 3: return symbol;
+    case 1: return symbol;
+    case 2: return quantity;
+    case 3: return price;
+    case 4: return tradeType;
     default: throw new IndexOutOfBoundsException("Invalid index: " + field$);
     }
   }
@@ -123,9 +127,10 @@ public class TradeAvro extends org.apache.avro.specific.SpecificRecordBase imple
   public void put(int field$, java.lang.Object value$) {
     switch (field$) {
     case 0: tradeId = (java.lang.Integer)value$; break;
-    case 1: quantity = (java.lang.Integer)value$; break;
-    case 2: price = (java.lang.Double)value$; break;
-    case 3: symbol = (java.lang.CharSequence)value$; break;
+    case 1: symbol = (java.lang.CharSequence)value$; break;
+    case 2: quantity = (java.lang.Integer)value$; break;
+    case 3: price = (java.lang.Double)value$; break;
+    case 4: tradeType = (java.lang.CharSequence)value$; break;
     default: throw new IndexOutOfBoundsException("Invalid index: " + field$);
     }
   }
@@ -145,6 +150,23 @@ public class TradeAvro extends org.apache.avro.specific.SpecificRecordBase imple
    */
   public void setTradeId(int value) {
     this.tradeId = value;
+  }
+
+  /**
+   * Gets the value of the 'symbol' field.
+   * @return The value of the 'symbol' field.
+   */
+  public java.lang.CharSequence getSymbol() {
+    return symbol;
+  }
+
+
+  /**
+   * Sets the value of the 'symbol' field.
+   * @param value the value to set.
+   */
+  public void setSymbol(java.lang.CharSequence value) {
+    this.symbol = value;
   }
 
   /**
@@ -182,20 +204,20 @@ public class TradeAvro extends org.apache.avro.specific.SpecificRecordBase imple
   }
 
   /**
-   * Gets the value of the 'symbol' field.
-   * @return The value of the 'symbol' field.
+   * Gets the value of the 'tradeType' field.
+   * @return The value of the 'tradeType' field.
    */
-  public java.lang.CharSequence getSymbol() {
-    return symbol;
+  public java.lang.CharSequence getTradeType() {
+    return tradeType;
   }
 
 
   /**
-   * Sets the value of the 'symbol' field.
+   * Sets the value of the 'tradeType' field.
    * @param value the value to set.
    */
-  public void setSymbol(java.lang.CharSequence value) {
-    this.symbol = value;
+  public void setTradeType(java.lang.CharSequence value) {
+    this.tradeType = value;
   }
 
   /**
@@ -240,9 +262,10 @@ public class TradeAvro extends org.apache.avro.specific.SpecificRecordBase imple
     implements org.apache.avro.data.RecordBuilder<TradeAvro> {
 
     private int tradeId;
+    private java.lang.CharSequence symbol;
     private int quantity;
     private double price;
-    private java.lang.CharSequence symbol;
+    private java.lang.CharSequence tradeType;
 
     /** Creates a new Builder */
     private Builder() {
@@ -259,17 +282,21 @@ public class TradeAvro extends org.apache.avro.specific.SpecificRecordBase imple
         this.tradeId = data().deepCopy(fields()[0].schema(), other.tradeId);
         fieldSetFlags()[0] = other.fieldSetFlags()[0];
       }
-      if (isValidValue(fields()[1], other.quantity)) {
-        this.quantity = data().deepCopy(fields()[1].schema(), other.quantity);
+      if (isValidValue(fields()[1], other.symbol)) {
+        this.symbol = data().deepCopy(fields()[1].schema(), other.symbol);
         fieldSetFlags()[1] = other.fieldSetFlags()[1];
       }
-      if (isValidValue(fields()[2], other.price)) {
-        this.price = data().deepCopy(fields()[2].schema(), other.price);
+      if (isValidValue(fields()[2], other.quantity)) {
+        this.quantity = data().deepCopy(fields()[2].schema(), other.quantity);
         fieldSetFlags()[2] = other.fieldSetFlags()[2];
       }
-      if (isValidValue(fields()[3], other.symbol)) {
-        this.symbol = data().deepCopy(fields()[3].schema(), other.symbol);
+      if (isValidValue(fields()[3], other.price)) {
+        this.price = data().deepCopy(fields()[3].schema(), other.price);
         fieldSetFlags()[3] = other.fieldSetFlags()[3];
+      }
+      if (isValidValue(fields()[4], other.tradeType)) {
+        this.tradeType = data().deepCopy(fields()[4].schema(), other.tradeType);
+        fieldSetFlags()[4] = other.fieldSetFlags()[4];
       }
     }
 
@@ -283,17 +310,21 @@ public class TradeAvro extends org.apache.avro.specific.SpecificRecordBase imple
         this.tradeId = data().deepCopy(fields()[0].schema(), other.tradeId);
         fieldSetFlags()[0] = true;
       }
-      if (isValidValue(fields()[1], other.quantity)) {
-        this.quantity = data().deepCopy(fields()[1].schema(), other.quantity);
+      if (isValidValue(fields()[1], other.symbol)) {
+        this.symbol = data().deepCopy(fields()[1].schema(), other.symbol);
         fieldSetFlags()[1] = true;
       }
-      if (isValidValue(fields()[2], other.price)) {
-        this.price = data().deepCopy(fields()[2].schema(), other.price);
+      if (isValidValue(fields()[2], other.quantity)) {
+        this.quantity = data().deepCopy(fields()[2].schema(), other.quantity);
         fieldSetFlags()[2] = true;
       }
-      if (isValidValue(fields()[3], other.symbol)) {
-        this.symbol = data().deepCopy(fields()[3].schema(), other.symbol);
+      if (isValidValue(fields()[3], other.price)) {
+        this.price = data().deepCopy(fields()[3].schema(), other.price);
         fieldSetFlags()[3] = true;
+      }
+      if (isValidValue(fields()[4], other.tradeType)) {
+        this.tradeType = data().deepCopy(fields()[4].schema(), other.tradeType);
+        fieldSetFlags()[4] = true;
       }
     }
 
@@ -337,6 +368,46 @@ public class TradeAvro extends org.apache.avro.specific.SpecificRecordBase imple
     }
 
     /**
+      * Gets the value of the 'symbol' field.
+      * @return The value.
+      */
+    public java.lang.CharSequence getSymbol() {
+      return symbol;
+    }
+
+
+    /**
+      * Sets the value of the 'symbol' field.
+      * @param value The value of 'symbol'.
+      * @return This builder.
+      */
+    public com.goldman.trade_service.avro.TradeAvro.Builder setSymbol(java.lang.CharSequence value) {
+      validate(fields()[1], value);
+      this.symbol = value;
+      fieldSetFlags()[1] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'symbol' field has been set.
+      * @return True if the 'symbol' field has been set, false otherwise.
+      */
+    public boolean hasSymbol() {
+      return fieldSetFlags()[1];
+    }
+
+
+    /**
+      * Clears the value of the 'symbol' field.
+      * @return This builder.
+      */
+    public com.goldman.trade_service.avro.TradeAvro.Builder clearSymbol() {
+      symbol = null;
+      fieldSetFlags()[1] = false;
+      return this;
+    }
+
+    /**
       * Gets the value of the 'quantity' field.
       * @return The value.
       */
@@ -351,9 +422,9 @@ public class TradeAvro extends org.apache.avro.specific.SpecificRecordBase imple
       * @return This builder.
       */
     public com.goldman.trade_service.avro.TradeAvro.Builder setQuantity(int value) {
-      validate(fields()[1], value);
+      validate(fields()[2], value);
       this.quantity = value;
-      fieldSetFlags()[1] = true;
+      fieldSetFlags()[2] = true;
       return this;
     }
 
@@ -362,7 +433,7 @@ public class TradeAvro extends org.apache.avro.specific.SpecificRecordBase imple
       * @return True if the 'quantity' field has been set, false otherwise.
       */
     public boolean hasQuantity() {
-      return fieldSetFlags()[1];
+      return fieldSetFlags()[2];
     }
 
 
@@ -371,7 +442,7 @@ public class TradeAvro extends org.apache.avro.specific.SpecificRecordBase imple
       * @return This builder.
       */
     public com.goldman.trade_service.avro.TradeAvro.Builder clearQuantity() {
-      fieldSetFlags()[1] = false;
+      fieldSetFlags()[2] = false;
       return this;
     }
 
@@ -390,9 +461,9 @@ public class TradeAvro extends org.apache.avro.specific.SpecificRecordBase imple
       * @return This builder.
       */
     public com.goldman.trade_service.avro.TradeAvro.Builder setPrice(double value) {
-      validate(fields()[2], value);
+      validate(fields()[3], value);
       this.price = value;
-      fieldSetFlags()[2] = true;
+      fieldSetFlags()[3] = true;
       return this;
     }
 
@@ -401,7 +472,7 @@ public class TradeAvro extends org.apache.avro.specific.SpecificRecordBase imple
       * @return True if the 'price' field has been set, false otherwise.
       */
     public boolean hasPrice() {
-      return fieldSetFlags()[2];
+      return fieldSetFlags()[3];
     }
 
 
@@ -410,47 +481,47 @@ public class TradeAvro extends org.apache.avro.specific.SpecificRecordBase imple
       * @return This builder.
       */
     public com.goldman.trade_service.avro.TradeAvro.Builder clearPrice() {
-      fieldSetFlags()[2] = false;
+      fieldSetFlags()[3] = false;
       return this;
     }
 
     /**
-      * Gets the value of the 'symbol' field.
+      * Gets the value of the 'tradeType' field.
       * @return The value.
       */
-    public java.lang.CharSequence getSymbol() {
-      return symbol;
+    public java.lang.CharSequence getTradeType() {
+      return tradeType;
     }
 
 
     /**
-      * Sets the value of the 'symbol' field.
-      * @param value The value of 'symbol'.
+      * Sets the value of the 'tradeType' field.
+      * @param value The value of 'tradeType'.
       * @return This builder.
       */
-    public com.goldman.trade_service.avro.TradeAvro.Builder setSymbol(java.lang.CharSequence value) {
-      validate(fields()[3], value);
-      this.symbol = value;
-      fieldSetFlags()[3] = true;
+    public com.goldman.trade_service.avro.TradeAvro.Builder setTradeType(java.lang.CharSequence value) {
+      validate(fields()[4], value);
+      this.tradeType = value;
+      fieldSetFlags()[4] = true;
       return this;
     }
 
     /**
-      * Checks whether the 'symbol' field has been set.
-      * @return True if the 'symbol' field has been set, false otherwise.
+      * Checks whether the 'tradeType' field has been set.
+      * @return True if the 'tradeType' field has been set, false otherwise.
       */
-    public boolean hasSymbol() {
-      return fieldSetFlags()[3];
+    public boolean hasTradeType() {
+      return fieldSetFlags()[4];
     }
 
 
     /**
-      * Clears the value of the 'symbol' field.
+      * Clears the value of the 'tradeType' field.
       * @return This builder.
       */
-    public com.goldman.trade_service.avro.TradeAvro.Builder clearSymbol() {
-      symbol = null;
-      fieldSetFlags()[3] = false;
+    public com.goldman.trade_service.avro.TradeAvro.Builder clearTradeType() {
+      tradeType = null;
+      fieldSetFlags()[4] = false;
       return this;
     }
 
@@ -460,9 +531,10 @@ public class TradeAvro extends org.apache.avro.specific.SpecificRecordBase imple
       try {
         TradeAvro record = new TradeAvro();
         record.tradeId = fieldSetFlags()[0] ? this.tradeId : (java.lang.Integer) defaultValue(fields()[0]);
-        record.quantity = fieldSetFlags()[1] ? this.quantity : (java.lang.Integer) defaultValue(fields()[1]);
-        record.price = fieldSetFlags()[2] ? this.price : (java.lang.Double) defaultValue(fields()[2]);
-        record.symbol = fieldSetFlags()[3] ? this.symbol : (java.lang.CharSequence) defaultValue(fields()[3]);
+        record.symbol = fieldSetFlags()[1] ? this.symbol : (java.lang.CharSequence) defaultValue(fields()[1]);
+        record.quantity = fieldSetFlags()[2] ? this.quantity : (java.lang.Integer) defaultValue(fields()[2]);
+        record.price = fieldSetFlags()[3] ? this.price : (java.lang.Double) defaultValue(fields()[3]);
+        record.tradeType = fieldSetFlags()[4] ? this.tradeType : (java.lang.CharSequence) defaultValue(fields()[4]);
         return record;
       } catch (org.apache.avro.AvroMissingFieldException e) {
         throw e;
@@ -497,11 +569,13 @@ public class TradeAvro extends org.apache.avro.specific.SpecificRecordBase imple
   {
     out.writeInt(this.tradeId);
 
+    out.writeString(this.symbol);
+
     out.writeInt(this.quantity);
 
     out.writeDouble(this.price);
 
-    out.writeString(this.symbol);
+    out.writeString(this.tradeType);
 
   }
 
@@ -512,29 +586,35 @@ public class TradeAvro extends org.apache.avro.specific.SpecificRecordBase imple
     if (fieldOrder == null) {
       this.tradeId = in.readInt();
 
+      this.symbol = in.readString(this.symbol instanceof Utf8 ? (Utf8)this.symbol : null);
+
       this.quantity = in.readInt();
 
       this.price = in.readDouble();
 
-      this.symbol = in.readString(this.symbol instanceof Utf8 ? (Utf8)this.symbol : null);
+      this.tradeType = in.readString(this.tradeType instanceof Utf8 ? (Utf8)this.tradeType : null);
 
     } else {
-      for (int i = 0; i < 4; i++) {
+      for (int i = 0; i < 5; i++) {
         switch (fieldOrder[i].pos()) {
         case 0:
           this.tradeId = in.readInt();
           break;
 
         case 1:
-          this.quantity = in.readInt();
+          this.symbol = in.readString(this.symbol instanceof Utf8 ? (Utf8)this.symbol : null);
           break;
 
         case 2:
-          this.price = in.readDouble();
+          this.quantity = in.readInt();
           break;
 
         case 3:
-          this.symbol = in.readString(this.symbol instanceof Utf8 ? (Utf8)this.symbol : null);
+          this.price = in.readDouble();
+          break;
+
+        case 4:
+          this.tradeType = in.readString(this.tradeType instanceof Utf8 ? (Utf8)this.tradeType : null);
           break;
 
         default:

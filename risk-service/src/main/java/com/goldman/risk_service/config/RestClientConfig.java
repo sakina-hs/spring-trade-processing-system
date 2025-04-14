@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import com.goldman.risk_service.client.SettlementServiceClient;
 
 @Configuration
-public class ClientConfig {
+public class RestClientConfig {
 
         @Bean
         public SettlementServiceClient settlementServiceClient(
