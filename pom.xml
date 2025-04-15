@@ -18,6 +18,7 @@
     <module>risk-service</module>
     <module>trade-service</module>
     <module>settlement-service</module>
+    <module>AuthService</module>
     
   </modules>
 
