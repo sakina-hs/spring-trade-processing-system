@@ -24,8 +24,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
-                user.getPassword(),
-                getAuthorities(user));
+                user.getPassword()
+                // getAuthorities(user)
+                , null);
     }
 
     // Helper method to extract authorities/roles from your User entity
