@@ -22,31 +22,31 @@ jobs:
       - name: Build and push trade-service image
         run: |
           mvn -f trade-service/pom.xml spring-boot:build-image -Dspring-boot.build-image.imageName=${{ secrets.DOCKER_USERNAME }}/trade-service:latest
-          docker push ${{ secrets.DOCKER_PASSWORD }}/trade-service:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/trade-service:latest
 
       - name: Build and push risk-service image
         run: |
           mvn -f risk-service/pom.xml spring-boot:build-image -Dspring-boot.build-image.imageName=${{ secrets.DOCKER_USERNAME }}/risk-service:latest
-          docker push ${{ secrets.DOCKER_PASSWORD }}/risk-service:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/risk-service:latest
 
       - name: Build and push settlement-service image
         run: |
           mvn -f settlement-service/pom.xml spring-boot:build-image -Dspring-boot.build-image.imageName=${{ secrets.DOCKER_USERNAME }}/settlement-service:latest
-          docker push ${{ secrets.DOCKER_PASSWORD }}/settlement-service:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/settlement-service:latest
 
       - name: Build and push auth-service image
         run: |
           mvn -f Authservice/pom.xml spring-boot:build-image -Dspring-boot.build-image.imageName=${{ secrets.DOCKER_USERNAME }}/auth-service:latest
-          docker push ${{ secrets.DOCKER_PASSWORD }}/auth-service:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/auth-service:latest
 
       - name: Build and push fund-service image
         run: |
           mvn -f FundService/pom.xml spring-boot:build-image -Dspring-boot.build-image.imageName=${{ secrets.DOCKER_USERNAME }}/fund-service:latest
-          docker push ${{ secrets.DOCKER_PASSWORD }}/fund-service:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/fund-service:latest
 
       - name: Build and push api gateway image
         run: |
           mvn -f api-gateway/pom.xml spring-boot:build-image -Dspring-boot.build-image.imageName=${{ secrets.DOCKER_USERNAME }}/api-gateway:latest
-          docker push ${{ secrets.DOCKER_PASSWORD }}/api-gateway:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/api-gateway:latest
 
           
