@@ -9,6 +9,7 @@ import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.Claims;
 
 import java.util.Date;
+import java.util.List;
 import java.security.Key;
 
 @Component
@@ -37,6 +38,11 @@ public class JwtUtil {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    public String extractRoles(String token) {
+        Claims claims = extractAllClaims(token);
+        return (String) claims.get("roles");
     }
 
     // Validate the JWT token

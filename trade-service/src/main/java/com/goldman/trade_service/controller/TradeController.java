@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 
 import com.goldman.trade_service.service.TradeDataGenerater;
@@ -36,18 +37,11 @@ public class TradeController {
     }
 
     @GetMapping("/home")
+    @PreAuthorize("hasRole('TRADER')")
     public ResponseEntity<String> getTradeHomePageData(Authentication authentication) {
-        // Check if the user has the 'TRADER' role
-        // if (authentication.getAuthorities().stream()
-        // .anyMatch(grantedAuthority ->
-        // grantedAuthority.getAuthority().equals("ROLE_TRADER"))) {
-        // Return trade data for traders
+
         return ResponseEntity.ok("Welcome to the Trade Homepage, Trader!");
-        // } else {
-        // If user doesn't have the right role, return unauthorized
-        // return ResponseEntity.status(HttpStatus.FORBIDDEN)
-        // .body("Access denied. You do not have the required role.");
-        // }
+
     }
 
 }

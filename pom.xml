@@ -19,6 +19,7 @@
     <module>trade-service</module>
     <module>settlement-service</module>
     <module>AuthService</module>
+    <module>FundService</module>
     
   </modules>
 
