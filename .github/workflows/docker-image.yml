@@ -16,8 +16,6 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: Qushus@0304
-        options: >-
-          --health-cmd pg_isready --interval 10s --timeout 5s --retries 5
 
     steps:
       - name: Checkout code
