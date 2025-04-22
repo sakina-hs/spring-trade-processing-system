@@ -2,9 +2,9 @@ version: '3'
 services:
 
   api-gateway:
-    build: ./api-gateway
+    image: sakina03/api-gateway:latest
     ports:
-      - "9090:9090"
+      - "9000:9000"
     depends_on:
       - trade-service
       - risk-service
@@ -39,13 +39,6 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
 
-  fund-service:
-    image: sakina03/fund-service:latest
-    ports:
-      - "8092:8092"
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     environment:
@@ -64,9 +57,9 @@ services:
       POSTGRES_PASSWORD: Qushus@0304
       POSTGRES_HOST_AUTH_METHOD: trust
 
-  broker:
+  kafka:
     image: confluentinc/cp-kafka:7.5.0
-    container_name: broker
+    container_name: kafka
     ports:
       - "9092:9092"
       - "29092:29092"
@@ -76,7 +69,7 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
   schema-registry:
@@ -84,12 +77,12 @@ services:
     hostname: schema-registry
     container_name: schema-registry
     depends_on:
-      - broker
+      - kafka
     ports:
       - "8085:8081"
     environment:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'broker:29092'
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'kafka:29092'
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
 
 
@@ -100,10 +93,10 @@ services:
     ports:
       - "8086:8080"
     depends_on:
-      - broker
+      - kafka
     environment:
       KAFKA_CLUSTERS_NAME: local
-      KAFKA_CLUSTERS_BOOTSTRAPSERVERS: broker:29092
+      KAFKA_CLUSTERS_BOOTSTRAPSERVERS: kafka:29092
       #      KAFKA_CLUSTERS_SCHEMAREGISTRY: http://schema-registry:8081
       DYNAMIC_CONFIG_ENABLED: 'true'
 
