@@ -1,5 +1,51 @@
 version: '3'
 services:
+
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "9090:9090"
+    depends_on:
+      - trade-service
+      - risk-service
+      - settlement-service
+      - auth-service
+
+  trade-service:
+    image: sakina03/trade-service:latest
+    ports:
+      - "8090:8090"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  risk-service:
+    image: sakina03/risk-service:latest
+    ports:
+      - "8089:8089"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  settlement-service:
+    image: sakina03/settlement-service:latest
+    ports:
+      - "8088:8088"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  auth-service:
+    image: sakina03/auth-service:latest
+    ports:
+      - "8091:8091"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  fund-service:
+    image: sakina03/fund-service:latest
+    ports:
+      - "8092:8092"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     environment:
