@@ -39,7 +39,7 @@ jobs:
 
       - name: Build and push auth-service image
         run: |
-          mvn -f Authservice/pom.xml spring-boot:build-image -Dspring-boot.build-image.imageName=${{ secrets.DOCKER_USERNAME }}/auth-service:latest
+          mvn -f AuthService/pom.xml spring-boot:build-image -Dspring-boot.build-image.imageName=${{ secrets.DOCKER_USERNAME }}/auth-service:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/auth-service:latest
 
       - name: Build and push fund-service image
