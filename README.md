@@ -17,6 +17,7 @@ The Spring Trade Processing System is a microservices-based application designed
   have been implemented.
 - Ongoing work includes Spring Cloud Configs, Advance use of Spring JPA in FundService and spring batch
 - Regular updates will be made as progress continues.
+- implemented CI workflow in GitHub Action for build image -> push to dockerHub repository on every commit.
 
 ## Project Structure
 
