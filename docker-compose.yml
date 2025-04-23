@@ -31,6 +31,7 @@ services:
       retries: 5
     networks:
       - default
+    
 
   kafka:
     container_name: kafka
@@ -51,7 +52,12 @@ services:
       default:
         aliases:
           - kafka-broker
-
+    healthcheck:
+      test: ["CMD", "/bin/sh", "-c", "kafka-topics.sh --bootstrap-server=kafka:9092 --list --timeout-ms 10000 > /dev/null"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
   schema-registry:
     image: confluentinc/cp-schema-registry:7.5.0
     hostname: schema-registry
@@ -66,7 +72,7 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'kafka-broker:29092' # Using alias
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8081/healthcheck"]
+      test: ["CMD", "curl", "-f", "http://schema-registry:8081/"]
       interval: 5s
       timeout: 3s
       retries: 3
@@ -152,6 +158,8 @@ services:
         condition: service_healthy
       auth-service:
         condition: service_healthy
+      tempo: # Add dependency on tempo
+        condition: service_started 
     networks:
       - default
 
@@ -166,7 +174,7 @@ services:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8090/actuator/health"]
+      test: ["CMD", "curl", "-f", "http://trade-service:8090/actuator/health"]
       interval: 5s
       timeout: 3s
       retries: 3
@@ -185,7 +193,7 @@ services:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8089/actuator/health"]
+      test: ["CMD", "curl", "-f", "http://risk-service:8089/actuator/health"]
       interval: 5s
       timeout: 3s
       retries: 3
@@ -204,11 +212,11 @@ services:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8088/actuator/health"]
-      interval: 5s
-      timeout: 3s
+      test: ["CMD", "curl", "-f", "http://settlement-service:8088/actuator/health"]
+      interval: 10s
+      timeout: 6s
       retries: 3
-      start_period: 10s
+      start_period: 20s
     networks:
       - default
 
@@ -223,7 +231,7 @@ services:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8091/actuator/health"]
+      test: ["CMD", "curl", "-f", "http://auth-service:8091/actuator/health"]
       interval: 5s
       timeout: 3s
       retries: 3
