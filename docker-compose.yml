@@ -1,57 +1,9 @@
 version: '3'
+networks:
+  default:
+    name: my_app_network
+
 services:
-
-  api-gateway:
-    container_name: api-gateway
-    image: sakina03/api-gateway:latest
-    ports:
-      - "9000:9000"
-    depends_on:
-      - trade-service
-      - risk-service
-      - settlement-service
-      - auth-service
-
-  trade-service:
-    container_name: trade-service
-    image: sakina03/trade-service:latest
-    ports:
-      - "8090:8090"
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-
-  risk-service:
-    container_name: risk-service
-    image: sakina03/risk-service:latest
-    ports:
-      - "8089:8089"
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-    
-  settlement-service:
-    container_name: settlement-service
-    image: sakina03/settlement-service:latest
-    ports:
-      - "8088:8088"
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-    depends_on:
-      postgres:
-        condition: service_healthy
-
-
-  auth-service:
-    container_name: auth-service
-    image: sakina03/auth-service:latest
-    ports:
-      - "8091:8091"
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-    depends_on:
-      postgres:
-        condition: service_healthy
-
-
   zookeeper:
     container_name: zookeeper
     image: confluentinc/cp-zookeeper:latest
@@ -60,6 +12,8 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "22181:2181"
+    networks:
+      - default
 
   postgres:
     container_name: postgres
@@ -72,9 +26,11 @@ services:
       POSTGRES_PASSWORD: Qushus@0304
       POSTGRES_HOST_AUTH_METHOD: trust
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user"]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
       retries: 5
+    networks:
+      - default
 
   kafka:
     container_name: kafka
@@ -83,42 +39,55 @@ services:
       - "9092:9092"
       - "29092:29092"
     depends_on:
-      - zookeeper
+      zookeeper:
+        condition: service_started # Zookeeper doesn't have a clear health endpoint
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      default:
+        aliases:
+          - kafka-broker
 
   schema-registry:
-    
     image: confluentinc/cp-schema-registry:7.5.0
     hostname: schema-registry
     container_name: schema-registry
     depends_on:
-      - kafka
+      kafka:
+        condition: service_healthy
     ports:
       - "8085:8081"
     environment:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'kafka:29092'
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'kafka-broker:29092' # Using alias
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/healthcheck"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    networks:
+      - default
 
-
-      
   kafka-ui:
     container_name: kafka-ui
     image: provectuslabs/kafka-ui:latest
     ports:
       - "8086:8080"
     depends_on:
-      - kafka
+      kafka:
+        condition: service_healthy
     environment:
       KAFKA_CLUSTERS_NAME: local
-      KAFKA_CLUSTERS_BOOTSTRAPSERVERS: kafka:29092
-      #      KAFKA_CLUSTERS_SCHEMAREGISTRY: http://schema-registry:8081
+      KAFKA_CLUSTERS_BOOTSTRAPSERVERS: kafka-broker:29092 # Using alias
       DYNAMIC_CONFIG_ENABLED: 'true'
+    networks:
+      - default
 
   loki:
     image: grafana/loki:main
@@ -126,6 +95,9 @@ services:
     command: [ "-config.file=/etc/loki/local-config.yaml" ]
     ports:
       - "3100:3100"
+    networks:
+      - default
+
   prometheus:
     image: prom/prometheus:v2.46.0
     container_name: prometheus
@@ -136,6 +108,9 @@ services:
       - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     ports:
       - "9090:9090"
+    networks:
+      - default
+
   tempo:
     image: grafana/tempo:2.2.2
     container_name: tempo
@@ -146,6 +121,9 @@ services:
     ports:
       - "3110:3100"  # Tempo
       - "9411:9411" # zipkin
+    networks:
+      - default
+
   grafana:
     image: grafana/grafana:10.1.0
     container_name: grafana
@@ -157,3 +135,98 @@ services:
       - GF_AUTH_DISABLE_LOGIN_FORM=true
     ports:
       - "3000:3000"
+    networks:
+      - default
+
+  api-gateway:
+    container_name: api-gateway
+    image: sakina03/api-gateway:latest
+    ports:
+      - "9000:9000"
+    depends_on:
+      trade-service:
+        condition: service_healthy
+      risk-service:
+        condition: service_healthy
+      settlement-service:
+        condition: service_healthy
+      auth-service:
+        condition: service_healthy
+    networks:
+      - default
+
+  trade-service:
+    container_name: trade-service
+    image: sakina03/trade-service:latest
+    ports:
+      - "8090:8090"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090/actuator/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    networks:
+      - default
+
+  risk-service:
+    container_name: risk-service
+    image: sakina03/risk-service:latest
+    ports:
+      - "8089:8089"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8089/actuator/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    networks:
+      - default
+
+  settlement-service:
+    container_name: settlement-service
+    image: sakina03/settlement-service:latest
+    ports:
+      - "8088:8088"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8088/actuator/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    networks:
+      - default
+
+  auth-service:
+    container_name: auth-service
+    image: sakina03/auth-service:latest
+    ports:
+      - "8091:8091"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8091/actuator/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    networks:
+      - default
