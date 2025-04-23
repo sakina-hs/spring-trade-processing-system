@@ -25,10 +25,6 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: Qushus@0304
       POSTGRES_HOST_AUTH_METHOD: trust
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      retries: 5
     networks:
       - default
     
@@ -49,34 +45,22 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     networks:
-      default:
-        aliases:
-          - kafka-broker
-    healthcheck:
-      test: ["CMD", "/bin/sh", "-c", "kafka-topics.sh --bootstrap-server=kafka:9092 --list --timeout-ms 10000 > /dev/null"]
-      interval: 10s
-      timeout: 10s
-      retries: 5
-      start_period: 30s
+      - default
+        
   schema-registry:
     image: confluentinc/cp-schema-registry:7.5.0
     hostname: schema-registry
     container_name: schema-registry
     depends_on:
       kafka:
-        condition: service_healthy
+        condition: service_started
     ports:
       - "8085:8081"
     environment:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'kafka-broker:29092' # Using alias
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'kafka:9092'
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://schema-registry:8081/"]
-      interval: 5s
-      timeout: 3s
-      retries: 3
-      start_period: 10s
+    
     networks:
       - default
 
@@ -87,7 +71,7 @@ services:
       - "8086:8080"
     depends_on:
       kafka:
-        condition: service_healthy
+        condition: service_started
     environment:
       KAFKA_CLUSTERS_NAME: local
       KAFKA_CLUSTERS_BOOTSTRAPSERVERS: kafka-broker:29092 # Using alias
@@ -151,13 +135,13 @@ services:
       - "9000:9000"
     depends_on:
       trade-service:
-        condition: service_healthy
+        condition: service_started
       risk-service:
-        condition: service_healthy
+        condition: service_started
       settlement-service:
-        condition: service_healthy
+        condition: service_started
       auth-service:
-        condition: service_healthy
+        condition: service_started
       tempo: # Add dependency on tempo
         condition: service_started 
     networks:
@@ -172,13 +156,8 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
     depends_on:
       postgres:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://trade-service:8090/actuator/health"]
-      interval: 5s
-      timeout: 3s
-      retries: 3
-      start_period: 10s
+        condition: service_started
+    
     networks:
       - default
 
@@ -191,13 +170,7 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
     depends_on:
       postgres:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://risk-service:8089/actuator/health"]
-      interval: 5s
-      timeout: 3s
-      retries: 3
-      start_period: 10s
+        condition: service_started
     networks:
       - default
 
@@ -210,13 +183,7 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
     depends_on:
       postgres:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://settlement-service:8088/actuator/health"]
-      interval: 10s
-      timeout: 6s
-      retries: 3
-      start_period: 20s
+        condition: service_started
     networks:
       - default
 
@@ -229,12 +196,6 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
     depends_on:
       postgres:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://auth-service:8091/actuator/health"]
-      interval: 5s
-      timeout: 3s
-      retries: 3
-      start_period: 10s
+        condition: service_started
     networks:
       - default
