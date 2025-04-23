@@ -7,17 +7,16 @@ The Spring Trade Processing System is a microservices-based application designed
 ## Current Status
 
 - The project is in the **development stage**.
-- Key features such as
-  data streaming using kafka, authantication and authorization using JWT token,
-  api gatway for single entry point and token validation,
-  Fault tolerrance using circuit breaker pattern,
-  swagger implementation
-  trade cycle(trade creation (produced using kafka)-> consume it(in risk service)-> and save trade record in postgres DB(settlement service))
-  configuration with observability tools like Graphana, Promithious , Tempo and Loki
-  have been implemented.
+- Implemented Key features such as
+  - data streaming using kafka, authantication and authorization using JWT token,
+  - api gatway for single entry point and token validation,
+  - Fault tolerrance using circuit breaker pattern,
+  - swagger implementation
+  - trade cycle(trade creation (produced using kafka)-> consume it(in risk service)-> and save trade record in postgres DB(settlement service))
+  - configuration with observability tools like Graphana, Promithious , Tempo and Loki
+  - implemented CI workflow in GitHub Action for build image -> push to dockerHub repository on every commit.
 - Ongoing work includes Spring Cloud Configs, Advance use of Spring JPA in FundService and spring batch
 - Regular updates will be made as progress continues.
-- implemented CI workflow in GitHub Action for build image -> push to dockerHub repository on every commit.
 
 ## Project Structure
 
