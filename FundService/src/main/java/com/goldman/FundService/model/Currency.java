@@ -1,18 +1,23 @@
 package com.goldman.FundService.model;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
 
-@Entity
 @Data
+@Entity
 public class Currency {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    private String name;
+    private Long id;
 
+    private String code;
+
+    @OneToMany(mappedBy = "currency")
+    private List<Fund> funds;
 }

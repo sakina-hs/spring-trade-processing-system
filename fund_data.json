@@ -1,0 +1,72 @@
+[
+    {
+        "fundName": "High Yield Opportunities",
+        "fundType": "Passive",
+        "assetType": "Fixed Income",
+        "currency": "USD",
+        "shareClass": "Retail"
+    },
+    {
+        "fundName": "Emerging Markets Value",
+        "fundType": "Passive",
+        "assetType": "Equity",
+        "currency": "EUR",
+        "shareClass": "Retail"
+    },
+    {
+        "fundName": "Global Income Bond",
+        "fundType": "Passive",
+        "assetType": "Fixed Income",
+        "currency": "USD",
+        "shareClass": "Retail"
+    },
+    {
+        "fundName": "European Small Companies",
+        "fundType": "Passive",
+        "assetType": "Equity",
+        "currency": "EUR",
+        "shareClass": "Retail"
+    },
+    {
+        "fundName": "Healthcare Leaders",
+        "fundType": "Passive",
+        "assetType": "Equity",
+        "currency": "GBP",
+        "shareClass": "Retail"
+    },
+    {
+        "fundName": "European Bond Fund",
+        "fundType": "Passive",
+        "assetType": "Fixed Income",
+        "currency": "EUR",
+        "shareClass": "Retail"
+    },
+    {
+        "fundName": "Emerging Markets Debt",
+        "fundType": "Passive",
+        "assetType": "Fixed Income",
+        "currency": "EUR",
+        "shareClass": "Retail"
+    },
+    {
+        "fundName": "Global Multi-Asset Fund",
+        "fundType": "ETF",
+        "assetType": "Multi-Asset",
+        "currency": "USD",
+        "shareClass": "Retail"
+    },
+    {
+        "fundName": "Global Infrastructure",
+        "fundType": "ETF",
+        "assetType": "Alternative Investments",
+        "currency": "EUR",
+        "shareClass": "Retail"
+    },
+    {
+        "fundName": "Asia Pacific Growth",
+        "fundType": "ETF",
+        "assetType": "Equity",
+        "currency": "JPY",
+        "shareClass": "Retail"
+    }
+]

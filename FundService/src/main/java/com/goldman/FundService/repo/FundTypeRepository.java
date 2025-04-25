@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import com.goldman.FundService.model.FundType;
 
 @Repository
-public interface FundTypeRepository extends JpaRepository<FundType, Integer> {
+public interface FundTypeRepository extends JpaRepository<FundType, Long> {
 
-    List<FundType> findByName(String name);
 }

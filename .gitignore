@@ -242,3 +242,4 @@ mvn
 mvnw
 mvnw.cmd
 maven-wrapper.properties
+docker-compose.yml

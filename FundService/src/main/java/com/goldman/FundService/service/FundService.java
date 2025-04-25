@@ -1,49 +1,37 @@
 package com.goldman.FundService.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.goldman.FundService.model.AssetType;
-import com.goldman.FundService.model.Currency;
-import com.goldman.FundService.model.FundType;
+import com.goldman.FundService.dto.FundDTO;
+import com.goldman.FundService.model.Fund;
 import com.goldman.FundService.model.ShareClass;
-import com.goldman.FundService.repo.AssetTypeRepository;
-import com.goldman.FundService.repo.CurrencyRepository;
-import com.goldman.FundService.repo.FundTypeRepository;
-import com.goldman.FundService.repo.ShareClassRepository;
-
+import com.goldman.FundService.repo.FundRepository;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class FundService {
 
     @Autowired
-    private AssetTypeRepository assetTypeRepository;
-    @Autowired
-    private CurrencyRepository currencyRepository;
-    @Autowired
-    private FundTypeRepository fundTypeRepository;
-    @Autowired
-    private ShareClassRepository shareClassRepository;
+    private FundRepository fundRepository;
 
-    public List<AssetType> getAllAssetTypes() {
+    public List<FundDTO> getAllFundData() {
+        List<Fund> funds = fundRepository.findAllWithRelations();
+        List<FundDTO> dtoList = new ArrayList<>();
 
-        return assetTypeRepository.findAll();
+        for (Fund fund : funds) {
+            for (ShareClass sc : fund.getShareClasses()) {
+                FundDTO dto = new FundDTO();
+                dto.setFundName(fund.getName());
+                dto.setFundType(fund.getFundType().getName());
+                dto.setAssetType(fund.getAssetType().getName());
+                dto.setCurrency(fund.getCurrency().getCode());
+                dto.setShareClass(sc.getName());
+                dtoList.add(dto);
+            }
+        }
 
-    }
-
-    public List<Currency> getAllCurrencies() {
-        return currencyRepository.findAll();
-
-    }
-
-    public List<FundType> getAllFundTypes() {
-        return fundTypeRepository.findAll();
-
-    }
-
-    public List<ShareClass> getAllShareClasses() {
-        return shareClassRepository.findAll();
+        return dtoList;
     }
 }

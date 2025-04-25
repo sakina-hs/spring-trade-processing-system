@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import com.goldman.FundService.model.ShareClass;
 
 @Repository
-public interface ShareClassRepository extends JpaRepository<ShareClass, Integer> {
+public interface ShareClassRepository extends JpaRepository<ShareClass, Long> {
 
-    List<ShareClass> findByName(String name);
 }
