@@ -60,4 +60,9 @@ jobs:
           mvn -f FundService/pom.xml spring-boot:build-image -Dspring-boot.build-image.imageName=${{ secrets.DOCKER_USERNAME }}/fund-service:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/fund-service:latest
 
+      - name: Build and push notification-service image
+        run: |
+          mvn -f NotificationService/pom.xml spring-boot:build-image -Dspring-boot.build-image.imageName=${{ secrets.DOCKER_USERNAME }}/notification-service:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/notification-service:latest
+
           
