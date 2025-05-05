@@ -17,9 +17,10 @@ public class SettlementTrade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int tradeId;
-    private String symbol;
+    private String fundname;
     private int quantity;
     private double price;
-    private String tradeType; // BUY or SELL
+    private String tradeType;
+    private String TradeUser;
 
 }

@@ -11,9 +11,10 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 public class TradeRequest {
     private int tradeId;
-    private String symbol;
+    private String fundname;
     private int quantity;
     private double price;
-    private String tradeType; // BUY or SELL
+    private String tradeType;
+    private String TradeUser; // BUY or SELL
 
 }

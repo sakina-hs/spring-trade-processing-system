@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
+
 import com.goldman.trade_service.model.TradeRequest;
 import org.springframework.beans.factory.annotation.Value;
 import com.goldman.trade_service.avro.TradeAvro;
@@ -22,10 +23,11 @@ public class TradeService {
     public void processTrade(TradeRequest request) {
         TradeAvro tradeAvro = TradeAvro.newBuilder()
                 .setTradeId(request.getTradeId()) // Example field
-                .setSymbol(request.getSymbol())
+                .setFundname(request.getFundname()) // Example field
                 .setQuantity(request.getQuantity()) // Example field
                 .setPrice(request.getPrice())
                 .setTradeType(request.getTradeType())
+                .setTradeUser("sakina")
                 .build();
         logger.info("Producing Kafka message: {}", tradeAvro);
         kafkaTemplate.send(tradeTopic, tradeAvro)
@@ -37,5 +39,15 @@ public class TradeService {
                     }
                 });
     }
+    /*
+     * public String getCurrentUsername() {
+     * Authentication authentication =
+     * SecurityContextHolder.getContext().getAuthentication();
+     * if (authentication != null && authentication.isAuthenticated()) {
+     * return authentication.getName(); // This returns the username
+     * }
+     * return null;
+     * }
+     */
 
 }

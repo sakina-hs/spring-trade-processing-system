@@ -1,14 +1,24 @@
 version: '3'
+networks:
+  default:
+    name: my_app_network
+
 services:
   zookeeper:
+    container_name: zookeeper
     image: confluentinc/cp-zookeeper:latest
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "22181:2181"
+    networks:
+      - default
+    volumes:
+      - zookeeper_data:/var/lib/zookeeper
 
   postgres:
+    container_name: postgres
     image: postgres:16
     ports:
       - "5432:5432"
@@ -17,49 +27,66 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: Qushus@0304
       POSTGRES_HOST_AUTH_METHOD: trust
+    networks:
+      - default
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
-  broker:
+  kafka:
+    container_name: kafka
     image: confluentinc/cp-kafka:7.5.0
-    container_name: broker
     ports:
       - "9092:9092"
       - "29092:29092"
     depends_on:
-      - zookeeper
+      zookeeper:
+        condition: service_started # Zookeeper doesn't have a clear health endpoint
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-
+    networks:
+      - default
+    volumes:
+      - kafka_data:/var/lib/kafka
+        
   schema-registry:
     image: confluentinc/cp-schema-registry:7.5.0
     hostname: schema-registry
     container_name: schema-registry
     depends_on:
-      - broker
+      kafka:
+        condition: service_started
     ports:
       - "8085:8081"
     environment:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'broker:29092'
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'PLAINTEXT://kafka:29092'
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+    
+    networks:
+      - default
+    volumes:
+      - schema_registry_data:/var/lib/schema-registry
 
-
-      
   kafka-ui:
     container_name: kafka-ui
     image: provectuslabs/kafka-ui:latest
     ports:
       - "8086:8080"
     depends_on:
-      - broker
+      kafka:
+        condition: service_started
     environment:
-      KAFKA_CLUSTERS_NAME: local
-      KAFKA_CLUSTERS_BOOTSTRAPSERVERS: broker:29092
-      #      KAFKA_CLUSTERS_SCHEMAREGISTRY: http://schema-registry:8081
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
       DYNAMIC_CONFIG_ENABLED: 'true'
+    networks:
+      - default
+    volumes:
+      - kafka_ui_data:/var/lib/kafka-ui
 
   loki:
     image: grafana/loki:main
@@ -67,6 +94,11 @@ services:
     command: [ "-config.file=/etc/loki/local-config.yaml" ]
     ports:
       - "3100:3100"
+    networks:
+      - default
+    volumes:
+      - loki_data:/var/lib/loki
+
   prometheus:
     image: prom/prometheus:v2.46.0
     container_name: prometheus
@@ -75,8 +107,12 @@ services:
       - --config.file=/etc/prometheus/prometheus.yml
     volumes:
       - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/var/lib/prometheus
     ports:
       - "9090:9090"
+    networks:
+      - default
+
   tempo:
     image: grafana/tempo:2.2.2
     container_name: tempo
@@ -84,17 +120,161 @@ services:
     volumes:
       - ./docker/tempo/tempo.yml:/etc/tempo.yaml:ro
       - ./data/tempo:/tmp/tempo
+      - tempo_data:/var/lib/tempo
     ports:
       - "3110:3100"  # Tempo
       - "9411:9411" # zipkin
+    networks:
+      - default
+
   grafana:
     image: grafana/grafana:10.1.0
     container_name: grafana
     volumes:
       - ./docker/grafana:/etc/grafana/provisioning/datasources:ro
+      - grafana_data:/var/lib/grafana
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
       - GF_AUTH_DISABLE_LOGIN_FORM=true
     ports:
       - "3000:3000"
+    networks:
+      - default
+
+  api-gateway:
+    container_name: api-gateway
+    image: sakina03/api-gateway:latest
+    ports:
+      - "9000:9000"
+    depends_on:
+      trade-service:
+        condition: service_started
+      risk-service:
+        condition: service_started
+      settlement-service:
+        condition: service_started
+      auth-service:
+        condition: service_started
+      tempo: # Add dependency on tempo
+        condition: service_started 
+    networks:
+      - default
+    volumes:
+      - api_gateway_data:/var/lib/api-gateway
+
+  trade-service:
+    container_name: trade-service
+    image: sakina03/trade-service:latest
+    ports:
+      - "8090:8090"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      postgres:
+        condition: service_started
+    
+    networks:
+      - default
+    volumes:
+      - trade_service_data:/var/lib/trade-service
+
+  risk-service:
+    container_name: risk-service
+    image: sakina03/risk-service:latest
+    ports:
+      - "8089:8089"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      postgres:
+        condition: service_started
+    networks:
+      - default
+    volumes:
+      - risk_service_data:/var/lib/risk-service
+
+  settlement-service:
+    container_name: settlement-service
+    image: sakina03/settlement-service:latest
+    ports:
+      - "8088:8088"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      postgres:
+        condition: service_started
+    networks:
+      - default
+    volumes:
+      - settlement_service_data:/var/lib/settlement-service
+
+  auth-service:
+    container_name: auth-service
+    image: sakina03/auth-service:latest
+    ports:
+      - "8091:8091"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      postgres:
+        condition: service_started
+    networks:
+      - default
+    volumes:
+      - auth_service_data:/var/lib/auth-service
+
+  fund-service:
+    container_name: fund-service
+    image: sakina03/fund-service:latest
+    ports:
+      - "8092:8092"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      postgres:
+        condition: service_started
+    networks:
+      - default
+    volumes:
+      - fund_service_data:/var/lib/fund-service
+
+  notification-service:
+    container_name: notification-service
+    image: sakina03/notification-service:latest
+    ports:
+      - "8093:8093"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - default
+    volumes:
+      - notification_service_data:/var/lib/notification-service
+
+  trade-frontend:
+    container_name: trade-frontend
+    build:
+      context: ./trade-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    networks:
+      - default
+
+volumes:
+  zookeeper_data:
+  postgres_data:
+  kafka_data:
+  schema_registry_data:
+  kafka_ui_data:
+  loki_data:
+  prometheus_data:
+  tempo_data:
+  grafana_data:
+  api_gateway_data:
+  trade_service_data:
+  risk_service_data:
+  settlement_service_data:
+  auth_service_data:
+  fund_service_data:
+  notification_service_data:

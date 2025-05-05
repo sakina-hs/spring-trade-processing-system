@@ -8,10 +8,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SettlementDto {
-    // private int tradeId;
-    private String symbol;
+    private int tradeId;
+    private String fundname;
     private int quantity;
     private double price;
     private String tradeType;
+    private String TradeUser;
 
 }

@@ -25,8 +25,8 @@ public class SettlementService {
 
     public static SettlementTrade toEntity(SettlementDto dto) {
         SettlementTrade trade = new SettlementTrade();
-        // trade.setTradeId(dto.getTradeId());
-        trade.setSymbol(dto.getSymbol());
+        trade.setTradeId(dto.getTradeId());
+        trade.setFundname(dto.getFundname());
         trade.setQuantity(dto.getQuantity());
         trade.setPrice(dto.getPrice());
         trade.setTradeType(dto.getTradeType());

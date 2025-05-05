@@ -58,28 +58,6 @@ public class JwtUtil {
         }
     }
 
-    // Extract user details from the token and create an Authentication object
-    /*
-     * public Authentication getAuthentication(String token) {
-     * Claims claims = Jwts.parserBuilder()
-     * .setSigningKey(getSigningKey())
-     * .build()
-     * .parseClaimsJws(token)
-     * .getBody();
-     * String username = claims.getSubject();
-     * // Extract roles from the token and map them to authorities
-     * List<SimpleGrantedAuthority> authorities = ((List<?>)
-     * claims.get("roles")).stream()
-     * .map(role -> new SimpleGrantedAuthority((String) role))
-     * .collect(Collectors.toList());
-     * // Create a User object and set the roles
-     * User principal = new User(username, "", authorities);
-     * // Return an Authentication object
-     * return new UsernamePasswordAuthenticationToken(principal, token,
-     * authorities);
-     * }
-     */
-
     // Extract the username from the token
     public String getUsernameFromToken(String token) {
         Claims claims = Jwts.parserBuilder()

@@ -24,26 +24,29 @@ public class TradeDataGenerater {
 
     public ResponseEntity<String> sendMockTrades() {
         logger.info("inside");
-
-        for (int i = 1; i <= 100; i++) {
-            final int tradeId = i;// i becomes tradeId
-            TradeRequest trade = new TradeRequest(
-                    tradeId, // using i as tradeId (1 to 100)
-                    symbols.get(random.nextInt(symbols.size())),
-                    random.nextInt(100) + 1,
-                    Math.round((100 + random.nextDouble() * 1000) * 100.0) / 100.0,
-                    (i % 2 == 0) ? "BUY" : "SELL");
-
-            webClient.post()
-                    .uri("/trades/processTrades")
-                    .bodyValue(trade)
-                    .retrieve()
-                    .bodyToMono(String.class)
-                    .doOnNext(response -> System.out.println("Trade " + tradeId + " sent: " + response))
-                    .subscribe();
-        }
-
+        /*
+         * for (int i = 1; i <= 100; i++) {
+         * final int tradeId = i;// i becomes tradeId
+         * TradeRequest trade = new TradeRequest(
+         * tradeId, // using i as tradeId (1 to 100)
+         * symbols.get(random.nextInt(symbols.size())),
+         * random.nextInt(100) + 1,
+         * Math.round((100 + random.nextDouble() * 1000) * 100.0) / 100.0,
+         * (i % 2 == 0) ? "BUY" : "SELL");
+         * 
+         * webClient.post()
+         * .uri("/trades/processTrades")
+         * .bodyValue(trade)
+         * .retrieve()
+         * .bodyToMono(String.class)
+         * .doOnNext(response -> System.out.println("Trade " + tradeId + " sent: " +
+         * response))
+         * .subscribe();
+         * }
+         * 
+         * return ResponseEntity.ok("100 trades sent successfully");
+         * }
+         */
         return ResponseEntity.ok("100 trades sent successfully");
     }
-
 }

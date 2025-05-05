@@ -4,9 +4,10 @@
   "name": "TradeAvro",
   "fields": [
     { "name": "tradeId", "type": "int" },
-    { "name": "symbol", "type": "string" },
+    { "name": "fundname", "type": "string" },
     { "name": "quantity", "type": "int" },
     { "name": "price", "type": "double" },
-    { "name": "tradeType", "type": "string" }
+    { "name": "tradeType", "type": "string" },
+    { "name": "TradeUser", "type": "string" }
   ]
 }

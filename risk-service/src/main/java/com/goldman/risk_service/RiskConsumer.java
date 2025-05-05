@@ -35,7 +35,13 @@ public class RiskConsumer {
     @KafkaListener(topics = "${spring.kafka.template.default-topic}")
     public void validateTrade(List<TradeAvro> trades) {
         for (TradeAvro tradeAvro : trades) {
+            if (tradeAvro == null) {
+                logger.warn("Received null TradeAvro message, skipping...");
+                continue; // Skip processing
+            }
+
             logger.info("Received trade for validation: {}", tradeAvro);
+
             boolean isValid = riskService.checkRisk(tradeAvro);
 
             if (isValid) {
@@ -43,25 +49,24 @@ public class RiskConsumer {
                 try {
                     kafkaTemplate.send("trade-validated-topic", tradeAvro);
                 } catch (Exception e) {
-                    logger.info("error in kafka", e.getMessage());
+                    logger.error("Error in Kafka send: {}", e.getMessage(), e);
                 }
                 settlementServiceClient.saveTrade(mapToSettlementTrade(tradeAvro));
             } else {
                 logger.warn("Trade failed risk checks: {}", tradeAvro.getTradeId());
             }
         }
-
     }
 
     private SettlementTradeInRisk mapToSettlementTrade(TradeAvro tradeAvro) {
 
         SettlementTradeInRisk SettlementTradeInRisk = new SettlementTradeInRisk();
-        // settlementTrade.setTradeId((int) tradeAvro.getTradeId()); // cast if Avro
-        // type is long
-        SettlementTradeInRisk.setSymbol(tradeAvro.getSymbol().toString()); // assuming 'security' = 'symbol'
+        SettlementTradeInRisk.setTradeId((int) tradeAvro.getTradeId()); // cast if Avro
+        SettlementTradeInRisk.setFundname(tradeAvro.getFundname().toString()); // assuming 'security' = 'symbol'
         SettlementTradeInRisk.setQuantity(tradeAvro.getQuantity());
         SettlementTradeInRisk.setPrice(tradeAvro.getPrice());
-        SettlementTradeInRisk.setTradeType(tradeAvro.getTradeType().toString()); // Avro enum to string
+        SettlementTradeInRisk.setTradeType(tradeAvro.getTradeType().toString());
+        SettlementTradeInRisk.setTradeUser(tradeAvro.getTradeUser().toString());
 
         logger.info("tradeavro in settlementTrade mapping:{}", SettlementTradeInRisk);
         return SettlementTradeInRisk;

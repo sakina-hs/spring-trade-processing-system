@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Data
 @Entity
@@ -19,9 +20,11 @@ public class Fund {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonProperty("fundName")
     private String name;
     private String fundCode;
     private LocalDate inceptionDate;
+    private double price;
 
     @ManyToOne
     private FundType fundType;
@@ -33,5 +36,6 @@ public class Fund {
     private Currency currency;
 
     @OneToMany(mappedBy = "fund", cascade = CascadeType.ALL)
+    @JsonProperty("shareClass")
     private List<ShareClass> shareClasses;
 }

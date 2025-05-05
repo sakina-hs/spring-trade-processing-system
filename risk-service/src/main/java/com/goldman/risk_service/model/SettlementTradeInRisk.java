@@ -8,10 +8,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SettlementTradeInRisk {
-    // private int tradeId;
-    private String symbol;
+    private int tradeId;
+    private String fundname;
     private int quantity;
     private double price;
-    private String tradeType; // BUY or SELL
+    private String tradeType;
+    private String TradeUser;
 
 }

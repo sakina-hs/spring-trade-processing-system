@@ -20,6 +20,7 @@
     <module>settlement-service</module>
     <module>AuthService</module>
     <module>FundService</module>
+    <module>NotificationService</module>
     
   </modules>
 
