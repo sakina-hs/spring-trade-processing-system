@@ -75,3 +75,8 @@ jobs:
         run: |
           mvn -f NotificationService/pom.xml spring-boot:build-image -Dspring-boot.build-image.imageName=${{ secrets.DOCKER_USERNAME }}/notification-service:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/notification-service:latest
+
+      - name: Build and push react-frontend image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/trade-frontend:latest ./trade-frontend
+          docker push ${{ secrets.DOCKER_USERNAME }}/trade-frontend:latest
