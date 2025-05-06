@@ -239,6 +239,7 @@ services:
     volumes:
       - fund_service_data:/var/lib/fund-service
 
+
   notification-service:
     container_name: notification-service
     image: sakina03/notification-service:latest
@@ -251,15 +252,18 @@ services:
     volumes:
       - notification_service_data:/var/lib/notification-service
 
+
   trade-frontend:
     container_name: trade-frontend
-    build:
-      context: ./trade-frontend
-      dockerfile: Dockerfile
+    image: sakina03/trade-frontend:latest
     ports:
       - "5173:5173"
     networks:
       - default
+    
+
+ 
+
 
 volumes:
   zookeeper_data:
@@ -278,3 +282,4 @@ volumes:
   auth_service_data:
   fund_service_data:
   notification_service_data:
+  

@@ -10,7 +10,7 @@ const Login: React.FC = () => {
     e.preventDefault();
 
     try {
-      const res = await fetch('http://localhost:9000/auth/login', {
+      const res = await fetch('http://api-gateway:9000/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
