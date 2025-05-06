@@ -147,6 +147,8 @@ services:
     image: sakina03/api-gateway:latest
     ports:
       - "9000:9000"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
     depends_on:
       trade-service:
         condition: service_started

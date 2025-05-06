@@ -30,7 +30,7 @@ const FundList: React.FC = () => {
     }
 
     axios
-      .get<Fund[]>("http://api-gateway:9000/funds", {
+      .get<Fund[]>("http://localhost:9000/funds", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -67,7 +67,7 @@ const FundList: React.FC = () => {
       }
 
       axios
-        .post("http://api-gateway:9000/trades/processTrades", tradePayload, {
+        .post("http://localhost:9000/trades/processTrades", tradePayload, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
