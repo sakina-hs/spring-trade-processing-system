@@ -22,18 +22,7 @@ const FundList: React.FC = () => {
   const [quantity, setQuantity] = useState<number>(1);
 
   useEffect(() => {
-    const tokenData = localStorage.getItem("token");
-    let token = tokenData;
-
-    // Check if token is stored as a JSON object
-    try {
-      const parsedToken = JSON.parse(tokenData || "");
-      if (parsedToken && parsedToken.token) {
-        token = parsedToken.token;
-      }
-    } catch (e) {
-      console.warn("Token is not in JSON format.");
-    }
+    const token = localStorage.getItem("token");
 
     if (!token) {
       alert("No token found. Please login.");
@@ -56,43 +45,42 @@ const FundList: React.FC = () => {
   }, []);
 
   const handleBuyClick = (fund: Fund) => {
-    console.log("Buy clicked for fund:", fund.fundName);
     setSelectedFund(fund);
     setShowModal(true);
   };
 
   const handleConfirmBuy = () => {
-    if (selectedFund) {
-      const tradePayload = {
-        tradeId: 1, // Replace with unique ID logic if needed
-        fundname: selectedFund.fundName,
-        quantity: quantity,
-        price: selectedFund.price,
-        tradeType: "BUY",
-      };
+    if (!selectedFund) return;
 
-      const token = localStorage.getItem("token");
-      if (!token) {
-        alert("You must be logged in to trade.");
-        return;
-      }
-
-      axios
-        .post("http://localhost:9000/trades/processTrades", tradePayload, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then(() => {
-          alert("Trade placed successfully!");
-          setShowModal(false);
-          setQuantity(1);
-        })
-        .catch((error) => {
-          console.error("Trade failed:", error);
-          alert("Trade failed. Try again.");
-        });
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("You must be logged in to trade.");
+      return;
     }
+
+    const tradePayload = {
+      tradeId: new Date().getTime(), // simple unique ID using timestamp
+      fundname: selectedFund.fundName,
+      quantity,
+      price: selectedFund.price,
+      tradeType: "BUY",
+    };
+
+    axios
+      .post("http://localhost:9000/trades/processTrades", tradePayload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(() => {
+        alert("Trade placed successfully!");
+        setShowModal(false);
+        setQuantity(1);
+      })
+      .catch((error) => {
+        console.error("Trade failed:", error);
+        alert("Trade failed. Try again.");
+      });
   };
 
   return (
