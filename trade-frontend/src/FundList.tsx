@@ -22,7 +22,18 @@ const FundList: React.FC = () => {
   const [quantity, setQuantity] = useState<number>(1);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const tokenData = localStorage.getItem("token");
+    let token = tokenData;
+
+    // Check if token is stored as a JSON object
+    try {
+      const parsedToken = JSON.parse(tokenData || "");
+      if (parsedToken && parsedToken.token) {
+        token = parsedToken.token;
+      }
+    } catch (e) {
+      console.warn("Token is not in JSON format.");
+    }
 
     if (!token) {
       alert("No token found. Please login.");
