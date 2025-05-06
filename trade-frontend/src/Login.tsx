@@ -17,10 +17,13 @@ const Login: React.FC = () => {
       });
 
       if (res.ok) {
-        const token = await res.text();
-        localStorage.setItem('token', token);
+        const data = await res.json(); // get JSON response
+        const token = data.token;
+        console.log('Login successful, token:', token);
+        localStorage.setItem('token', token); // store plain token string
         navigate('/funds');
-      } else {
+      }
+       else {
         alert('Invalid credentials');
       }
     } catch (err) {
