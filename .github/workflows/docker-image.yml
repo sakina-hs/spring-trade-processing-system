@@ -3,11 +3,12 @@ name: Build and Push Docker Images
 on:
   push:
     branches:
-      - main  # or 'master'
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     services:
       postgres:
         image: postgres:16
@@ -16,6 +17,12 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: Qushus@0304
+          POSTGRES_DB: fundservice
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: Checkout code
@@ -54,8 +61,12 @@ jobs:
         run: |
           mvn -f api-gateway/pom.xml spring-boot:build-image -Dspring-boot.build-image.imageName=${{ secrets.DOCKER_USERNAME }}/api-gateway:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/api-gateway:latest
-          
+
       - name: Build and push fund-service image
+        env:
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/fundservice
+          SPRING_DATASOURCE_USERNAME: postgres
+          SPRING_DATASOURCE_PASSWORD: Qushus@0304
         run: |
           mvn -f FundService/pom.xml spring-boot:build-image -Dspring-boot.build-image.imageName=${{ secrets.DOCKER_USERNAME }}/fund-service:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/fund-service:latest
@@ -64,5 +75,3 @@ jobs:
         run: |
           mvn -f NotificationService/pom.xml spring-boot:build-image -Dspring-boot.build-image.imageName=${{ secrets.DOCKER_USERNAME }}/notification-service:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/notification-service:latest
-
-          
