@@ -20,7 +20,7 @@ const Signup: React.FC = () => {
     const payload = { username, password, email, role };
 
     try {
-      const res = await fetch('http://localhost:9000/auth/register', {
+      const res = await fetch('http://api-gateway:9000/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
