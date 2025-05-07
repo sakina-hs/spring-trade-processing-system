@@ -24,10 +24,36 @@ public class JwtAuthFilter implements WebFilter {
     @Autowired
     private JwtUtil jwtUtil;
 
+    // List of open endpoints where JWT is not required
+    private static final List<String> OPEN_ENDPOINTS = List.of(
+            "/auth/login",
+            "/auth/register",
+            "/swagger-ui.html",
+            "/swagger-ui",
+            "/swagger-ui/",
+            "/swagger-ui/index.html",
+            "/v3/api-docs",
+            "/v3/api-docs/",
+            "/v3/api-docs/swagger-config",
+            "/swagger-resources",
+            "/swagger-resources/",
+            "/actuator",
+            "/actuator/",
+            "/actuator/prometheus");
+
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+        String path = exchange.getRequest().getURI().getPath();
+
+        // Allow public endpoints without JWT check
+        if (OPEN_ENDPOINTS.stream().anyMatch(path::startsWith)) {
+            return chain.filter(exchange);
+        }
+
+        // Get Authorization header
         String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
+        // Reject if header missing or not a Bearer token
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return unauthorized(exchange);
         }
