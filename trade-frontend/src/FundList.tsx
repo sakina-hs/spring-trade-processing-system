@@ -36,6 +36,7 @@ const FundList: React.FC = () => {
         },
       })
       .then((response) => {
+        console.log("Funds loaded:", response.data);
         setFunds(response.data);
       })
       .catch((error) => {
