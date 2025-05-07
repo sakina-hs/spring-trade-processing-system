@@ -15,9 +15,8 @@ import java.util.stream.Collectors;
 public class FundCachedService {
 
     @Autowired
-    private ObjectMapper objectMapper; // Use the configured ObjectMapper bean
-
-    private static final String JSON_FILE_PATH = "/tmp/generated_files/fund_data.json"; // or your actual path
+    private ObjectMapper objectMapper;
+    private static final String JSON_FILE_PATH = "/tmp/generated_files/fund_data.json";
 
     // TODO: Use a more robust caching mechanism in production
     @Cacheable("funds")
@@ -32,7 +31,7 @@ public class FundCachedService {
     }
 
     public List<FundDTO> searchFunds(String fundType, String assetType, String currency, String shareClass) {
-        List<FundDTO> allFunds = getAllFunds(); // will use cache because of @Cacheable
+        List<FundDTO> allFunds = getAllFunds();
 
         return allFunds.stream()
                 .filter(fund -> fundType == null || fund.getFundType().equalsIgnoreCase(fundType))
@@ -41,8 +40,8 @@ public class FundCachedService {
                 .filter(fund -> shareClass == null || fund.getShareClasses().stream()
                         .anyMatch(sc -> sc.getName().equalsIgnoreCase(shareClass)))
                 .filter(fund -> {
-                    Double price = fund.getPrice(); // Assuming FundDTO has a getPrice() method
-                    return price != null && price > 0; // Example condition for price
+                    Double price = fund.getPrice();
+                    return price != null && price > 0;
                 })
                 .collect(Collectors.toList());
     }
