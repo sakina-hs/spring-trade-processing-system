@@ -16,7 +16,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/funds")
-@CrossOrigin(origins = "*")
 public class FundController {
 
     @Autowired
