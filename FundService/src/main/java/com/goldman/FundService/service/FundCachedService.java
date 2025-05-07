@@ -17,7 +17,7 @@ public class FundCachedService {
     @Autowired
     private ObjectMapper objectMapper; // Use the configured ObjectMapper bean
 
-    private static final String JSON_FILE_PATH = "fund_data.json"; // or your actual path
+    private static final String JSON_FILE_PATH = "/tmp/generated_files/fund_data.json"; // or your actual path
 
     // TODO: Use a more robust caching mechanism in production
     @Cacheable("funds")

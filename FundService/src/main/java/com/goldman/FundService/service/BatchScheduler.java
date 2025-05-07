@@ -19,7 +19,7 @@ public class BatchScheduler {
     @Autowired
     private Job exportJsonJob;
 
-    @Scheduled(cron = "0 0 0 * * ?") // This triggers every day at midnight
+    @Scheduled(cron = "0 */10 * * * *") // This triggers 10 minutes
     public void runJob() throws Exception {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addString("JobID", String.valueOf(System.currentTimeMillis()))
