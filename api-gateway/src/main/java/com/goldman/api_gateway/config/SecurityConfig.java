@@ -25,8 +25,8 @@ public class SecurityConfig {
         private final String[] freeResourceUrls = { "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**",
                         "/swagger-resources/**", "/api-docs/**", "/aggregate/**", "/actuator/prometheus",
                         "/auth/register",
-                        "/auth/login", "/actuator/**", "/trades/*", "/funds/*", "/risk/*", "notification/*",
-                        "settlement/*" };
+                        "/auth/login", "/actuator/**", "/trades/*", "/funds/*", "/risk/*", "/notification/*",
+                        "/settlement/*" };
 
         @Bean
         public CorsConfigurationSource corsConfigurationSource() {
