@@ -96,8 +96,7 @@ services:
       - "3100:3100"
     networks:
       - default
-    volumes:
-      - loki_data:/var/lib/loki
+    
 
   prometheus:
     image: prom/prometheus:v2.46.0
@@ -105,9 +104,7 @@ services:
     command:
       - --enable-feature=exemplar-storage
       - --config.file=/etc/prometheus/prometheus.yml
-    volumes:
-      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - prometheus_data:/var/lib/prometheus
+    
     ports:
       - "9090:9090"
     networks:
@@ -117,10 +114,7 @@ services:
     image: grafana/tempo:2.2.2
     container_name: tempo
     command: [ "-config.file=/etc/tempo.yaml" ]
-    volumes:
-      - ./docker/tempo/tempo.yml:/etc/tempo.yaml:ro
-      - ./data/tempo:/tmp/tempo
-      - tempo_data:/var/lib/tempo
+   
     ports:
       - "3110:3100"  # Tempo
       - "9411:9411" # zipkin
@@ -130,9 +124,7 @@ services:
   grafana:
     image: grafana/grafana:10.1.0
     container_name: grafana
-    volumes:
-      - ./docker/grafana:/etc/grafana/provisioning/datasources:ro
-      - grafana_data:/var/lib/grafana
+    
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
@@ -162,8 +154,7 @@ services:
         condition: service_started 
     networks:
       - default
-    volumes:
-      - api_gateway_data:/var/lib/api-gateway
+    
 
   trade-service:
     container_name: trade-service
@@ -178,8 +169,7 @@ services:
     
     networks:
       - default
-    volumes:
-      - trade_service_data:/var/lib/trade-service
+    
 
   risk-service:
     container_name: risk-service
@@ -193,8 +183,7 @@ services:
         condition: service_started
     networks:
       - default
-    volumes:
-      - risk_service_data:/var/lib/risk-service
+    
 
   settlement-service:
     container_name: settlement-service
@@ -208,9 +197,7 @@ services:
         condition: service_started
     networks:
       - default
-    volumes:
-      - settlement_service_data:/var/lib/settlement-service
-
+    
   auth-service:
     container_name: auth-service
     image: sakina03/auth-service:latest
@@ -223,8 +210,7 @@ services:
         condition: service_started
     networks:
       - default
-    volumes:
-      - auth_service_data:/var/lib/auth-service
+    
 
   fund-service:
     container_name: fund-service
@@ -238,8 +224,7 @@ services:
         condition: service_started
     networks:
       - default
-    volumes:
-      - fund_service_data:/var/lib/fund-service
+    
 
 
   notification-service:
@@ -251,8 +236,7 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
       - default
-    volumes:
-      - notification_service_data:/var/lib/notification-service
+   
 
 
   trade-frontend:
@@ -273,15 +257,6 @@ volumes:
   kafka_data:
   schema_registry_data:
   kafka_ui_data:
-  loki_data:
-  prometheus_data:
-  tempo_data:
-  grafana_data:
-  api_gateway_data:
-  trade_service_data:
-  risk_service_data:
-  settlement_service_data:
-  auth_service_data:
-  fund_service_data:
-  notification_service_data:
+ 
+  
   
