@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: microservices-config
+  namespace: default
+data:
+  SPRING_PROFILES_ACTIVE: "docker"
+  API_GATEWAY_URL: "http://api-gateway"
+  AUTH_SERVICE_URL: "http://auth-service"
+  FUND_SERVICE_URL: "http://fund-service"
+  TRADE_SERVICE_URL: "http://trade-service"
+  TRADE_FRONTEND_URL: "http://trade-frontend"
+  SETTLEMENT_SERVICE_URL: "http://settlement-service"
+  RISK_SERVICE_URL: "http://risk-service"
+  NOTIFICATION_SERVICE_URL: "http://notification-service"
