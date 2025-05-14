@@ -61,13 +61,13 @@ Additionally, the project includes:
 
 ### Accessing the Application
 
-- API Gateway: http://localhost:9090
-- Kafka UI: http://localhost:8086/
-- Grafana Dashboard: http://localhost:3000
-- Trade Service: http://localhost:8090
-- Risk Service: http://localhost:8089
-- Settlement Service:http://localhost:8088
-- Auth Service: http://localhost:8091
+- API Gateway: http://api-gateway
+- Kafka UI: http://kafka-ui
+- Grafana Dashboard: http://grafana
+- Trade Service: http://trade-service
+- Risk Service: http://risk-service
+- Settlement Service: http://settlement-service
+- Auth Service: http://auth-service
 
 ## Monitoring and Logging
 
