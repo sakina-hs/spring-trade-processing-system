@@ -1,59 +1,74 @@
+# Spring Trade Processing System
 
-# Trade Processing System
+## Overview
 
-The **Trade Processing System** is a microservices-based application designed to handle trade processing, risk management, fund management, notifications, and settlements. It leverages Spring Boot(security,MVC,Cloud,Batch,JPA) and Kafka for backend services and a modern frontend built with Vite and Tailwind CSS.
+The Spring Trade Processing System is a microservices-based application designed to handle various aspects of trade processing. It is built using Spring Boot and follows a modular architecture, with each service responsible for a specific domain. The system leverages Docker for containerization and includes monitoring and logging capabilities.
+
+## Current Status
+
+- The project is in the **development stage**.
+- Implemented Key features such as
+  - data streaming using kafka, authantication and authorization using JWT token,
+  - api gatway for single entry point and token validation,
+  - Fault tolerrance using circuit breaker pattern,
+  - swagger implementation
+  - trade cycle(trade creation (produced using kafka)-> consume it(in risk service)-> and save trade record in postgres DB(settlement service))
+  - configuration with observability tools like Graphana, Promithious , Tempo and Loki
+  - implemented CI workflow in GitHub Action for build image -> push to dockerHub repository on every commit.
+- Ongoing work includes Spring Cloud Configs, Advance use of Spring JPA in FundService and spring batch
+- Regular updates will be made as progress continues.
 
 ## Project Structure
 
-The project is organized into multiple services, each responsible for a specific domain:
+The project is organized into the following modules:
 
-- **api-gateway**: Acts as the entry point for all client requests, routing them to the appropriate microservices.
-- **AuthService**: Handles authentication and authorization for the system.
+- **api-gateway**: Acts as the entry point for all client requests, routing them to the appropriate services.
+- **AuthService**: Handles authentication and authorization.
 - **FundService**: Manages fund-related operations.
-- **NotificationService**: Sends notifications to users about trade updates.
-- **risk-service**: Evaluates and manages risks associated with trades.
-- **settlement-service**: Handles the settlement of trades.
-- **trade-service**: Processes trade requests and integrates with other services.
-- **trade-frontend**: A modern web-based frontend for interacting with the system.
+- **NotificationService**: Sends notifications to users.
+- **risk-service**: Evaluates and manages trade risks.
+- **settlement-service**: Handles trade settlements.
+- **trade-service**: Manages trade-related operations.
 
-## Features
+Additionally, the project includes:
 
-- **Microservices Architecture**: Each service is independently deployable and scalable.
-- **Spring Boot**: Backend services are built using Spring Boot for rapid development and robust performance.
-- **Apache Kafka**: For live data handling.
-- **Frontend**: A responsive and user-friendly frontend built with Vite and Tailwind CSS.
-- **Dockerized Deployment**: All services are containerized for easy deployment using Docker and Docker Compose.
-- **Monitoring and Metrics**: Integrated with Grafana and Prometheus for monitoring and observability.
+- **data/tempo**: Configuration for distributed tracing.
+- **docker**: Contains Docker configurations for Grafana, Prometheus, and Tempo.
 
 ## Prerequisites
 
-- **Java 17** or higher
-- **Node.js** (for the frontend)
-- **Docker** and **Docker Compose**
-- **Maven** (for building backend services)
+- Java 17 or higher
+- Maven 3.8+
+- Docker and Docker Compose
 
 ## Getting Started
 
-### 1. Clone the Repository
-```bash
-git clone <repository-url>
-cd spring-trade-processing-system
-```
+### Build and Run
 
-### 2. Start the Application
-Use Docker Compose to start all services:
-```bash
-docker-compose up --build
-```
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd spring-trade-processing-system
+   ```
+2. Build the project using Maven:
+   ```bash
+   mvn clean install
+   ```
+3. Start the services using Docker Compose:
+   ```bash
+   docker-compose up
+   ```
 
-### 3. Access the Application
-- **Frontend**: [http://localhost:5173]
-- **API Gateway**: [http://localhost:9000]
-- **Grafana Dashboard**: [http://localhost:3000]
-- **Kafka UI**: [http://localhost:8086]
+### Accessing the Application
 
-## Configuration
+- API Gateway: http://api-gateway
+- Kafka UI: http://kafka-ui
+- Grafana Dashboard: http://grafana
+- Trade Service: http://trade-service
+- Risk Service: http://risk-service
+- Settlement Service: http://settlement-service
+- Auth Service: http://auth-service
 
-- **API Gateway**: Configure routes in `api-gateway/src/main/resources/application.properties`.
-- **Database**: Update database configurations in each service's `application.properties` file.
-- **Monitoring**: Grafana and Prometheus configurations are located in the docker directory.
+## Monitoring and Logging
+
+The system uses Prometheus for metrics collection and Grafana for visualization. Tempo is used for distributed tracing.
