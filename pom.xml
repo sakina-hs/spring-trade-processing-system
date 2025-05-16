@@ -15,12 +15,10 @@
   <name>spring-boot-3-microservices</name>
   <modules>
     <module>api-gateway</module>
-    <module>risk-service</module>
     <module>trade-service</module>
     <module>settlement-service</module>
     <module>AuthService</module>
     <module>FundService</module>
-    <module>NotificationService</module>
     
   </modules>
 
