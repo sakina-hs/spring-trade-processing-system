@@ -55,3 +55,9 @@ jobs:
         run: |
           mvn -f FundService/pom.xml spring-boot:build-image -Dspring-boot.build-image.imageName=${{ secrets.DOCKER_USERNAME }}/fund-service:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/fund-service:latest
+
+      - name: Build and push trade-frontend service image
+        run: |
+          cd trade-frontend
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/trade-frontend:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/trade-frontend:latest
