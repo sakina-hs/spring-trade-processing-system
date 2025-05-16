@@ -16,6 +16,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: Qushus@0304
+          POSTGRES_DB: fundservice
 
     steps:
       - name: Checkout code
