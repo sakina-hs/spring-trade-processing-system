@@ -21,6 +21,8 @@ const FundList: React.FC = () => {
   const [selectedFund, setSelectedFund] = useState<Fund | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
 
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -30,7 +32,7 @@ const FundList: React.FC = () => {
     }
 
     axios
-      .get<Fund[]>("http://localhost:9000/funds", {
+      .get<Fund[]>(`${API_BASE_URL}/funds`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -72,7 +74,7 @@ const FundList: React.FC = () => {
     };
 
     axios
-      .post("http://localhost:9000/trades/processTrades", tradePayload, {
+      .post(`${API_BASE_URL}/trades/processTrades`, tradePayload, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
