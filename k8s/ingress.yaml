@@ -1,68 +1,39 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: microservices-ingress
+  name: api-gateway-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   rules:
-    - host: api.example.com
+    - host: api.com
       http:
         paths:
-          - path: /
+          - path: /trades(/|$)(.*)
             pathType: Prefix
             backend:
               service:
                 name: api-gateway
                 port:
                   number: 80
-    - host: auth.example.com
-      http:
-        paths:
-          - path: /auth
+          - path: /fund(/|$)(.*)
             pathType: Prefix
             backend:
               service:
-                name: auth-service
-                port:
-                  number: 8091
-    - host: fund.example.com
-      http:
-        paths:
-          - path: /fund
-            pathType: Prefix
-            backend:
-              service:
-                name: fund-service
-                port:
-                  number: 8092
-    - host: trade.example.com
-      http:
-        paths:
-          - path: /trades
-            pathType: Prefix
-            backend:
-              service:
-                name: trade-service
-                port:
-                  number: 8090
-    - host: frontend.example.com
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: trade-frontend
+                name: api-gateway
                 port:
                   number: 80
-    - host: settlement.example.com
-      http:
-        paths:
-          - path: /settlement
+          - path: /auth(/|$)(.*)
             pathType: Prefix
             backend:
               service:
-                name: settlement-service
+                name: api-gateway
                 port:
-                  number: 8088
+                  number: 80
+          - path: /settlement(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: api-gateway
+                port:
+                  number: 80

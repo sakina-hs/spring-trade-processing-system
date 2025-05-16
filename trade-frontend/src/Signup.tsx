@@ -10,6 +10,8 @@ const Signup: React.FC = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmitting) return;
@@ -20,19 +22,17 @@ const Signup: React.FC = () => {
     const payload = { username, password, email, role };
 
     try {
-      const res = await fetch('http://localhost:9000/auth/register', {
+      const res = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
 
-     // same import and form code as before...
-
-    if (res.ok) {
-      navigate('/login'); // <-- redirect to login
-    } else {
-      alert('Signup failed');
-    }
+      if (res.ok) {
+        navigate('/login'); // <-- redirect to login
+      } else {
+        alert('Signup failed');
+      }
     } catch (err: any) {
       setError(err.message || 'Something went wrong. Please try again later.');
       console.error('Signup error:', err);
