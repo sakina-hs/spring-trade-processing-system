@@ -66,23 +66,3 @@ spec:
                 name: settlement-service
                 port:
                   number: 8088
-    - host: risk.example.com
-      http:
-        paths:
-          - path: /risk
-            pathType: Prefix
-            backend:
-              service:
-                name: risk-service
-                port:
-                  number: 8089
-    - host: notification.example.com
-      http:
-        paths:
-          - path: /notification
-            pathType: Prefix
-            backend:
-              service:
-                name: notification-service
-                port:
-                  number: 8093

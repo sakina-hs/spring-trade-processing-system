@@ -11,5 +11,3 @@ data:
   TRADE_SERVICE_URL: "http://trade-service"
   TRADE_FRONTEND_URL: "http://trade-frontend"
   SETTLEMENT_SERVICE_URL: "http://settlement-service"
-  RISK_SERVICE_URL: "http://risk-service"
-  NOTIFICATION_SERVICE_URL: "http://notification-service"

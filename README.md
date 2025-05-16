@@ -25,8 +25,6 @@ The project is organized into the following modules:
 - **api-gateway**: Acts as the entry point for all client requests, routing them to the appropriate services.
 - **AuthService**: Handles authentication and authorization.
 - **FundService**: Manages fund-related operations.
-- **NotificationService**: Sends notifications to users.
-- **risk-service**: Evaluates and manages trade risks.
 - **settlement-service**: Handles trade settlements.
 - **trade-service**: Manages trade-related operations.
 

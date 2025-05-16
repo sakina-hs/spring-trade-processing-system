@@ -1,0 +1,43 @@
+# Deployment for Trade Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trade-service
+  labels:
+    app: trade-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: trade-service
+  template:
+    metadata:
+      labels:
+        app: trade-service
+    spec:
+      containers:
+        - name: trade-service
+          image: sakina03/trade-service:latest
+          ports:
+            - containerPort: 8090
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "docker"
+          envFrom:
+            - secretRef:
+                name: app-secrets
+---
+# Service for Trade Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: trade-service
+spec:
+  selector:
+    app: trade-service
+  ports:
+    - protocol: TCP
+      port: 8090
+      targetPort: 8090
+      nodePort: 30083
+  type: LoadBalancer

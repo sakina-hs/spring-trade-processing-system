@@ -13,12 +13,6 @@ scrape_configs:
       - targets: ["trade-service:8090"]
         labels:
           application: "trade Service"
-  - job_name: "risk-service"
-    metrics_path: "/actuator/prometheus"
-    static_configs:
-      - targets: ["risk-service:8089"]
-        labels:
-          application: "risk Service"
   - job_name: "settlement-service"
     metrics_path: "/actuator/prometheus"
     static_configs:

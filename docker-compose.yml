@@ -144,8 +144,6 @@ services:
     depends_on:
       trade-service:
         condition: service_started
-      risk-service:
-        condition: service_started
       settlement-service:
         condition: service_started
       auth-service:
@@ -169,21 +167,7 @@ services:
     
     networks:
       - default
-    
-
-  risk-service:
-    container_name: risk-service
-    image: sakina03/risk-service:latest
-    ports:
-      - "8089:8089"
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-    depends_on:
-      postgres:
-        condition: service_started
-    networks:
-      - default
-    
+        
 
   settlement-service:
     container_name: settlement-service
@@ -224,18 +208,7 @@ services:
         condition: service_started
     networks:
       - default
-    
 
-
-  notification-service:
-    container_name: notification-service
-    image: sakina03/notification-service:latest
-    ports:
-      - "8093:8093"
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-    networks:
-      - default
    
 
 

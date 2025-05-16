@@ -1,0 +1,40 @@
+# Deployment for Fund Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fund-service
+  labels:
+    app: fund-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fund-service
+  template:
+    metadata:
+      labels:
+        app: fund-service
+    spec:
+      containers:
+        - name: fund-service
+          image: sakina03/fund-service:latest
+          ports:
+            - containerPort: 8092
+          envFrom:
+            - secretRef:
+                name: app-secrets
+---
+# Service for Fund Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: fund-service
+spec:
+  selector:
+    app: fund-service
+  ports:
+    - protocol: TCP
+      port: 8092
+      targetPort: 8092
+      nodePort: 30086
+  type: LoadBalancer
